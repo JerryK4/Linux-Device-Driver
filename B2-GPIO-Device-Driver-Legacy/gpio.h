@@ -1,0 +1,15 @@
+#ifndef __LED_MODULE_H__
+#define __LED_MODULE_H__
+
+#define GPIO_ADDR_BASE  0x4804C000
+#define GPIO_ADDR_END   0x4804CFFF
+#define GPIO_ADDR_SIZE (GPIO_ADDR_END-GPIO_ADDR_BASE)
+
+
+#define GPIO_OE_OFFSET              0x134
+#define GPIO_SETDATAOUT_OFFSET      0x194
+#define GPIO_CLEARDATAOUT_OFFSET    0x190
+
+#define GPIO1_16 (1<<16) /*P9_15*/
+
+#endif
