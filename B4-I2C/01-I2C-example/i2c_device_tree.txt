@@ -1,0 +1,5 @@
+	i2c_ex:i2c_ex@35{
+		compatible="i2c_ex_compatible";
+		reg=<0x35>;
+		status="okay";
+	};
