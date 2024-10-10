@@ -1,0 +1,57 @@
+&am33xx_pinmux {
+	ehrpwm1_pins: ehrpwm1_pins {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x848, PIN_OUTPUT | MUX_MODE6) /* P9.14, EHRPWM1A */
+		>;
+	};
+
+	gpio_pins: gpio_pins {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x848, PIN_OUTPUT | MUX_MODE7) /* P9.14, gpio50 */
+		>;
+	};
+};
+
+&epwmss1 {
+	status = "okay";
+};
+
+&ehrpwm1 {
+	#pwm-cells = <2>;
+	status = "okay";
+};
+
+/ {
+	foo_device {
+		compatible = "gpio-descriptor-based";
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&ehrpwm1_pins>;
+		pinctrl-1 = <&gpio_pins>;
+		led-gpios = <&gpio1 18 GPIO_ACTIVE_HIGH>;	/** gpio1_18 */
+		pwms = <&ehrpwm1 0 5000000>;	/* 0 corresponds to the PWM index, relative to the controller, and 5000000 represents the period*/
+		max-brightness = <255>;
+		default-state = "off";
+		status = "okay";
+	};
+};
+
+/*Giải thích từng thành phần:
+1:foo_device: Đây là tên của node, có thể là tên của thiết bị hoặc driver mà bạn đang cấu hình.
+
+2:compatible = "gpio-descriptor-based";: Xác định loại thiết bị hoặc driver tương thích với thiết bị này. Trong trường hợp này, thiết bị này tương thích với loại thiết bị dựa trên mô tả GPIO.
+
+3:pinctrl-names = "default", "sleep";: Xác định các trạng thái điều khiển chân GPIO. "default" và "sleep" có thể là các chế độ cấu hình khác nhau của chân GPIO.
+
+4:pinctrl-0 = <&ehrpwm1_pins>;: Liên kết đến nhóm chân GPIO cho chế độ "default". &ehrpwm1_pins là tham chiếu đến một node khác trong Device Tree định nghĩa các chân GPIO cho PWM.
+
+5:pinctrl-1 = <&gpio_pins>;: Liên kết đến nhóm chân GPIO cho chế độ "sleep". &gpio_pins là tham chiếu đến một node khác định nghĩa các chân GPIO trong chế độ tiết kiệm điện.
+
+6:led-gpios = <&gpio1 18 GPIO_ACTIVE_HIGH>;: Xác định GPIO điều khiển LED. &gpio1 là tham chiếu đến một node GPIO, 18 là số chân GPIO, và GPIO_ACTIVE_HIGH chỉ ra rằng tín hiệu hoạt động khi ở mức cao.
+
+7:pwms = <&ehrpwm1 0 5000000>;: Cấu hình PWM cho thiết bị. &ehrpwm1 là tham chiếu đến node PWM controller, 0 là chỉ mục PWM tương ứng với controller, và 5000000 là chu kỳ của PWM (tính bằng nanosecond).
+
+8:max-brightness = <255>;: Xác định độ sáng tối đa cho thiết bị (ví dụ như LED) với giá trị tối đa là 255.
+
+9:default-state = "off";: Xác định trạng thái mặc định của thiết bị khi khởi động, ở đây là "off" (tắt).
+
+10:status = "okay";: Xác định trạng thái của thiết bị, cho biết thiết bị này đang được bật và hoạt động.*/
