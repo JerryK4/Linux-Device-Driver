@@ -1,0 +1,43 @@
+#include<linux/module.h>
+#include<linux/platform_device.h>
+#include<linux/of.h>
+#include<linux/of_device.h>
+
+
+#define DRIVER_AUTHOR "jerry jerryfromuet@gamil.com"
+#define DRIVER_DESC "device tree example"
+
+static const struct of_device_id dt_ids[]={
+    {.compatible="dts_example",},
+    {/*sentinel*/}
+};
+
+static int my_pdrv_probe(struct platform_device *pdev)
+{
+    pr_info("%s - %d\n",__func__,__LINE__);
+    return 0;
+}
+
+static int my_pdrv_remove(struct platform_device *pdev)
+{
+    pr_info("%s - %d\n",__func__,__LINE__);
+    return 0;
+}
+
+/*platform driver*/
+static struct platform_driver mypdrv={
+    .probe=my_pdrv_probe,
+    .remove=my_pdrv_remove,
+    .driver={
+        .name="descriptor-based",
+        .of_match_table=of_match_ptr(dt_ids),
+        .owner=THIS_MODULE,
+    },
+};
+
+module_platform_driver(mypdrv);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR(DRIVER_AUTHOR);
+MODULE_DESCRIPTION(DRIVER_DESC);
+MODULE_VERSION("1.0");
